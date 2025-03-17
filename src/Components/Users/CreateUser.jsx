@@ -58,10 +58,10 @@ const CreateUser = () => {
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>Role</label>
                   <select className="form-select">
-                    <option selected>Select User Role</option>
-                    <option value="1">Salesman</option>
-                    <option value="2">Manager</option>
-                    <option value="3">Admin</option>
+                    <option defaultValue={""}>Select User Role</option>
+                    <option value={1}>Salesman</option>
+                    <option value={2}>Manager</option>
+                    <option value={3}>Admin</option>
                   </select>
                 </div>
                 <div className="col-md-6 mt-3">

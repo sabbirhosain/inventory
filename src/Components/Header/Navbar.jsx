@@ -5,9 +5,11 @@ import { BiLogOut } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { SlSettings } from "react-icons/sl";
 import { FaUserCircle } from "react-icons/fa";
+import { useAuthContextProvider } from "../../Context/AuthContext";
 
 
 const Navbar = () => {
+  const { logout } = useAuthContextProvider();
   return (
     <div className="navbar_top">
       <div className="container-fluid pe-md-5">
@@ -42,35 +44,12 @@ const Navbar = () => {
                 <FaUserCircle />
               </button>
               <ul className="dropdown-menu dropdown-menu-end mt-2 py-0 rounded-0">
-                <li>
-                  {" "}
-                  <button
-                    type="button"
-                    className="dropdown-item d-flex align-items-center gap-2"
-                  >
-                    <BiLogOut />
-                    Logout
-                  </button>
-                </li>
+                <li> <button type="button" className="dropdown-item d-flex align-items-center gap-2" onClick={logout}><BiLogOut /> Logout </button> </li>
+                <hr className="dropdown-divider p-0 m-0" />
+                <li> <Link to={"/profile"} className="dropdown-item d-flex align-items-center gap-2"><CgProfile /> Profile </Link> </li>
                 <hr className="dropdown-divider p-0 m-0" />
                 <li>
-                  <Link
-                    to={"/profile"}
-                    className="dropdown-item d-flex align-items-center gap-2"
-                  >
-                    <CgProfile />
-                    Profile
-                  </Link>
-                </li>
-                <hr className="dropdown-divider p-0 m-0" />
-                <li>
-                  <Link
-                    to={"/settings"}
-                    className="dropdown-item d-flex align-items-center gap-2"
-                  >
-                    <SlSettings />
-                    Setting
-                  </Link>
+                  <Link to={"/settings"} className="dropdown-item d-flex align-items-center gap-2"><SlSettings />Setting</Link>
                 </li>
               </ul>
             </div>
