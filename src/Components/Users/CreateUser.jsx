@@ -8,6 +8,50 @@ const CreateUser = () => {
   const [showPassword, setShowPassword] = useState(false);
   const passwordShowToggle = () => { setShowPassword(!showPassword) };
 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      if (!user || !password) {
+        return setError("user and password is required...!!")
+      }
+      const response = await fetch(login, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify({ user: user, password: password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        toast.success(data.message || 'Login Successfully!')
+        localStorage.setItem('root', encryptData(data)); // Encrypt user data
+        navigate('/');
+      } else {
+        setError(data.message || 'User and Password Invalid');
+        console.error('Login failed:', data);
+      }
+
+    } catch (error) {
+      setError('Internal Server Error');
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
   return (
     <Layout>
       <section className='container my-5'>
@@ -57,7 +101,7 @@ const CreateUser = () => {
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>Role</label>
-                  <select className="form-select">
+                  <select className="form-select rounded-0">
                     <option defaultValue={""}>Select User Role</option>
                     <option value={1}>Salesman</option>
                     <option value={2}>Manager</option>

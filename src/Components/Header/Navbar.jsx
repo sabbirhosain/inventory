@@ -9,7 +9,10 @@ import { useAuthContextProvider } from "../../Context/AuthContext";
 
 
 const Navbar = () => {
-  const { logout } = useAuthContextProvider();
+  const { logout, decryptData } = useAuthContextProvider();
+  const encryptedToken = localStorage.getItem("root");
+  const decryptToken = decryptData(encryptedToken);
+
   return (
     <div className="navbar_top">
       <div className="container-fluid pe-md-5">
@@ -28,7 +31,7 @@ const Navbar = () => {
 
           <div className="d-none d-md-flex align-items-center gap-2">
             <h5 className="company_brand">inventory management system</h5>
-            <small className="bg-success text-white px-2">Admin</small>
+            <small className="bg-success text-white text-capitalize px-2">{decryptToken?.user?.user_type}</small>
           </div>
           <div className="d-flex align-items-center gap-3">
             <Link to={"#"} title="Create Invoice" className="btn btn-outline-primary rounded-0 d-flex align-items-center justify-content-center"> <FaFileInvoice /> </Link>

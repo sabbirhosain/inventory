@@ -56,7 +56,7 @@ const UpdateUser = () => {
                   <input type="file" className='form-control rounded-0' />
                 </div>
                 <div className="col-md-6 mb-3">
-                  <label className='form-label'>Role</label>
+                  <label className='form-label rounded-0'>Role</label>
                   <select className="form-select">
                     <option defaultValue={""}>Select User Role</option>
                     <option value={1}>Salesman</option>

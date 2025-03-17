@@ -1,4 +1,4 @@
-export const login = import.meta.env.VITE_API_URL + "/api/v1/auth/login/";
+export const login = import.meta.env.VITE_API_URL + "/api/v1/auth/login";
 export const register = import.meta.env.VITE_API_URL + "/api/v1/auth/register";
 export const refreshToken = import.meta.env.VITE_API_URL + "/api/v1/auth/refresh";
 
