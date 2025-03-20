@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component"
 import { BiEditAlt, BiTrash } from "react-icons/bi";
 import { BsEyeFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { useUserContextProvider } from "../../Context/UserContext";
 
 const UserTable = () => {
-  const [error, setError] = useState(null)
   const paginationOptions = { noRowsPerPage: true };
+  const { userDataFetch, userList, userError, isLoadingUser, userRoleFilter, userSearchFilter, userStatusFilter } = useUserContextProvider();
+  useEffect(() => { userDataFetch(1) }, [userRoleFilter, userStatusFilter, userSearchFilter]);
+
+  // data table page change
+  const onPageChange = page => {
+    userDataFetch(page);
+  };
+
 
   const columns = [
     {
@@ -16,8 +24,19 @@ const UserTable = () => {
       width: "60px"
     },
     {
+      name: "Image",
+      selector: row => <a href={row.user_image} target="_new">
+        <img src={row.user_image || ''} width='40' />
+      </a>,
+    },
+    {
       name: "Name",
-      selector: row => row.name,
+      selector: row => row.first_name + ' ' + row.last_name,
+      width: "150px"
+    },
+    {
+      name: "User Name",
+      selector: row => row.username,
       width: "150px"
     },
     {
@@ -27,38 +46,38 @@ const UserTable = () => {
     },
     {
       name: "Phone Number",
-      selector: row => row.phone,
+      selector: row => row.phone_number,
       width: "150px"
     },
     {
-      name: "Phone Number",
-      selector: row => row.phone,
+      name: "Date of Birth",
+      selector: row => row.date_of_birth,
       width: "150px"
     },
     {
-      name: "Phone Number",
-      selector: row => row.phone,
-      width: "150px"
-    },
-    {
-      name: "Phone Number",
-      selector: row => row.phone,
-      width: "150px"
-    },
-    {
-      name: "Phone Number",
-      selector: row => row.phone,
+      name: "User Role",
+      selector: row => row.role,
       width: "150px"
     },
     {
       name: "Status",
-      selector: row => row === false ? <button style={{ backgroundColor: "red", padding: "5px 20px", color: "white", borderRadius: "0px" }}>Hold</button> : <button style={{ backgroundColor: "green", padding: "5px 20px", color: "white", borderRadius: "0px" }}>Active</button>
+      selector: row => {
+        switch (row.user_status) {
+          case "hold":
+            return <button style={{ backgroundColor: "red", padding: "5px 20px", color: "white", borderRadius: "0px" }}>Hold</button>;
+          case "pending":
+            return <button style={{ backgroundColor: "orange", padding: "5px 20px", color: "white", borderRadius: "0px" }}>Pending</button>;
+          default:
+            return <button style={{ backgroundColor: "green", padding: "5px 20px", color: "white", borderRadius: "0px" }}>Active</button>;
+        }
+      },
+      width: "150px"
     },
     {
       name: "Action",
       cell: row => <div className="d-flex align-items-center gap-2">
-        <Link to='/users/view' className="btn btn-outline-primary rounded-0 btn-sm"><BsEyeFill /></Link>
-        <Link to='/users/update' className="btn btn-outline-success rounded-0 btn-sm"><BiEditAlt /></Link>
+        <Link to={`/users/view/${row.id}`} className="btn btn-outline-primary rounded-0 btn-sm"><BsEyeFill /></Link>
+        <Link to={`/users/update/${row.id}`} className="btn btn-outline-success rounded-0 btn-sm"><BiEditAlt /></Link>
         <button className="btn btn-outline-danger rounded-0 btn-sm"><BiTrash /></button>
         <button className="btn btn-outline-dark rounded-0 btn-sm"><FaCheck /></button>
       </div>,
@@ -66,41 +85,21 @@ const UserTable = () => {
     }
   ];
 
-  const data = [
-    {
-      id: 1,
-      name: 'sabbir hosain',
-      email: 'sabbir@gmail.com',
-      phone: '1234567890',
 
-    },
-    {
-      id: 1,
-      name: 'sabbir hosain',
-      email: 'sabbir@gmail.com',
-      phone: '1234567890',
-
-    },
-    {
-      id: 1,
-      name: 'sabbir hosain',
-      email: 'sabbir@gmail.com',
-      phone: '1234567890',
-
-    },
-  ]
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (userError) {
+    return <div>Error: {userError.message}</div>;
   } else {
     return (
       <>
         <DataTable
           columns={columns}
-          data={data}
+          data={userList.results}
           pagination
           paginationServer
           paginationComponentOptions={paginationOptions}
+          progressPending={isLoadingUser}
+          paginationTotalRows={userList.count}
+          onChangePage={onPageChange}
         />
       </>
     )

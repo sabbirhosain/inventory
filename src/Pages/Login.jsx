@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { login } from '../Context/Api_Base_Url';
 import { useAuthContextProvider } from '../Context/AuthContext';
 import { toast } from 'react-toastify';
@@ -13,7 +13,24 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { encryptData } = useAuthContextProvider();
+    const { encryptData, decryptData } = useAuthContextProvider();
+
+    // if user is already login than redirect dashboad page
+    useEffect(() => {
+        const storedData = localStorage.getItem('root');
+        if (storedData) {
+            try {
+                const decryptedData = decryptData(storedData);
+                if (decryptedData && decryptedData?.access_token) {
+                    navigate('/dashboad');
+                }
+            } catch (error) {
+                console.error('Error decrypting data:', error);
+                localStorage.removeItem('root');
+            }
+        }
+    }, [navigate, decryptData]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,7 +50,7 @@ const Login = () => {
             if (response.ok) {
                 toast.success(data.message || 'Login Successfully!')
                 localStorage.setItem('root', encryptData(data)); // Encrypt user data
-                navigate('/');
+                navigate('/dashboad');
             } else {
                 setError(data.message || 'User and Password Invalid');
                 console.error('Login failed:', data);

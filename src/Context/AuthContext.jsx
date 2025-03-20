@@ -1,6 +1,8 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import CryptoJS from 'crypto-js';
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { singleUser } from './Api_Base_Url';
 const AuthContextProvider = createContext();
 
 const AuthContext = ({ children }) => {
@@ -30,14 +32,52 @@ const AuthContext = ({ children }) => {
         }
     }
 
-    // user logout
+    // User Logout
     const logout = () => {
         localStorage.removeItem('root');
         navigate('/login');
     };
 
+    useEffect(() => {
+        const interceptor = axios.interceptors.response.use(
+            (response) => response,
+            (error) => {
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    console.log('Unauthorized or Forbidden. Logging out...');
+                    logout();
+                }
+                return Promise.reject(error);
+            }
+        );
+
+        return () => {
+            axios.interceptors.response.eject(interceptor);
+        };
+    }, [logout]);
+
+    // User Profile Fetch
+    const [updateProfile, setUpdateProfile] = useState({ first_name: "", last_name: "", username: "", email: "", phone_number: "", date_of_birth: "", user_image: null });
+    const [userProfile, setUserProfile] = useState({});
+    const userProfileFetch = async () => {
+        try {
+            const encryptedToken = localStorage.getItem("root");
+            const decryptToken = encryptedToken ? decryptData(encryptedToken) : null;
+
+            if (decryptToken) {
+                const response = await axios.get(`${singleUser}${decryptToken?.user?.id}`);
+                if (response && response.data) {
+                    setUserProfile(response.data.data);
+                    setUpdateProfile((prev) => ({ ...prev, ...response.data.data }));
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     return (
-        <AuthContextProvider.Provider value={{ encryptData, decryptData, logout }}>
+        <AuthContextProvider.Provider value={{ encryptData, decryptData, logout, userProfile, setUpdateProfile, userProfileFetch, updateProfile, }}>
             {children}
         </AuthContextProvider.Provider>
     )
@@ -55,10 +95,15 @@ export const useAuthContextProvider = () => {
 export const ProtectedRoute = ({ children }) => {
     const { decryptData } = useAuthContextProvider();
     const encryptedToken = localStorage.getItem("root");
-    const decryptToken = decryptData(encryptedToken);
-    if (!decryptToken) {
+    const decryptToken = encryptedToken ? decryptData(encryptedToken) : null;
+
+    if (!decryptToken?.access_token) {
         return <Navigate to="/login" />;
     } else {
         return children ? children : <Outlet />;
     }
 };
+
+
+
+

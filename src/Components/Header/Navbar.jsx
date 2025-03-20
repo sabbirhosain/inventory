@@ -9,9 +9,10 @@ import { useAuthContextProvider } from "../../Context/AuthContext";
 
 
 const Navbar = () => {
-  const { logout, decryptData } = useAuthContextProvider();
+  const { decryptData, logout } = useAuthContextProvider();
   const encryptedToken = localStorage.getItem("root");
-  const decryptToken = decryptData(encryptedToken);
+  const decryptToken = encryptedToken ? decryptData(encryptedToken) : null;
+
 
   return (
     <div className="navbar_top">
