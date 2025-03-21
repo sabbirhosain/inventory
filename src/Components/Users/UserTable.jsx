@@ -48,7 +48,7 @@ const UserTable = () => {
     {
       name: "Phone Number",
       selector: row => row.phone_number,
-      width: "200px"
+      width: "150px"
     },
     {
       name: "Date of Birth",
@@ -58,7 +58,7 @@ const UserTable = () => {
     {
       name: "User Role",
       selector: row => row.role,
-      width: "150px"
+      width: "130px"
     },
     {
       name: "Status",
