@@ -33,22 +33,22 @@ const UserTable = () => {
     {
       name: "Name",
       selector: row => row.first_name + ' ' + row.last_name,
-      width: "150px"
+      width: "200px"
     },
     {
       name: "User Name",
       selector: row => row.username,
-      width: "150px"
+      width: "200px"
     },
     {
       name: "Email",
       selector: row => row.email,
-      width: "250px"
+      width: "300px"
     },
     {
       name: "Phone Number",
       selector: row => row.phone_number,
-      width: "150px"
+      width: "200px"
     },
     {
       name: "Date of Birth",
