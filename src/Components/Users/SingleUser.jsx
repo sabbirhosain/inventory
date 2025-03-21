@@ -3,17 +3,20 @@ import Layout from '../../Layout/Layout'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios';
 import { singleUser } from '../../Context/Api_Base_Url';
+import { useAuthContextProvider } from '../../Context/AuthContext';
 
 const SingleUser = () => {
     const { id } = useParams();
     const [userData, setUserData] = useState({});
-
+    const { refreshAccessToken } = useAuthContextProvider();
+    
     useEffect(() => {
         const getUserData = async () => {
             try {
                 const response = await axios.get(`${singleUser}${id}`);
                 setUserData(response.data.data);
             } catch (error) {
+                if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) { await refreshAccessToken() };
                 console.log(error);
             }
         }

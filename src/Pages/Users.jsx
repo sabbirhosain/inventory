@@ -61,7 +61,7 @@ const Users = () => {
                 value={userRoleFilter}
                 onChange={selectRoleOption}
                 isLoading={isLoadingUser}
-                placeholder={isLoadingUser ? "Loading..." : "Select User Type..."}
+                placeholder={isLoadingUser ? "Loading..." : "Select User Role..."}
                 isClearable={true}
                 styles={customStyles}
               />
@@ -79,7 +79,7 @@ const Users = () => {
                 value={userStatusFilter}
                 onChange={selectStatusOption}
                 isLoading={isLoadingUser}
-                placeholder={isLoadingUser ? "Loading..." : "Select User Type..."}
+                placeholder={isLoadingUser ? "Loading..." : "Select User Status..."}
                 isClearable={true}
                 styles={customStyles}
               />

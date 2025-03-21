@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import CryptoJS from 'crypto-js';
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { singleUser } from './Api_Base_Url';
+import { refreshToken, singleUser } from './Api_Base_Url';
 const AuthContextProvider = createContext();
 
 const AuthContext = ({ children }) => {
@@ -38,22 +38,22 @@ const AuthContext = ({ children }) => {
         navigate('/login');
     };
 
-    useEffect(() => {
-        const interceptor = axios.interceptors.response.use(
-            (response) => response,
-            (error) => {
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    console.log('Unauthorized or Forbidden. Logging out...');
-                    logout();
-                }
-                return Promise.reject(error);
+    // Refresh Token
+    const refreshAccessToken = async () => {
+        try {
+            const response = await axios.post(refreshToken, {}, { withCredentials: true });
+            if (response && response.data) {
+                console.log(response.data);
+                localStorage.setItem('root', encryptData(response.data));
+                return response.data;
             }
-        );
-
-        return () => {
-            axios.interceptors.response.eject(interceptor);
-        };
-    }, [logout]);
+        } catch (error) {
+            console.error("Refresh token failed:", error);
+            localStorage.removeItem("root");
+            window.location.href = "/login";
+            return null;
+        }
+    };
 
     // User Profile Fetch
     const [updateProfile, setUpdateProfile] = useState({ first_name: "", last_name: "", username: "", email: "", phone_number: "", date_of_birth: "", user_image: null });
@@ -71,13 +71,18 @@ const AuthContext = ({ children }) => {
                 }
             }
         } catch (error) {
-            console.log(error);
+            if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) {
+                localStorage.removeItem("root");
+                window.location.href = "/login";
+            } else {
+                console.log(error);
+            }
         }
     }
 
 
     return (
-        <AuthContextProvider.Provider value={{ encryptData, decryptData, logout, userProfile, setUpdateProfile, userProfileFetch, updateProfile, }}>
+        <AuthContextProvider.Provider value={{ encryptData, decryptData, logout, userProfile, setUpdateProfile, userProfileFetch, refreshAccessToken, updateProfile, }}>
             {children}
         </AuthContextProvider.Provider>
     )

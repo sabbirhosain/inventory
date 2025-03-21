@@ -7,11 +7,13 @@ import { toast } from 'react-toastify';
 import { useUserContextProvider } from '../../Context/UserContext';
 import { createUser } from '../../Context/Api_Base_Url';
 import axios from 'axios';
+import { useAuthContextProvider } from '../../Context/AuthContext';
 
 const CreateUser = () => {
   const [showPassword, setShowPassword] = useState(false);
   const passwordShowToggle = () => { setShowPassword(!showPassword) };
   const { userDataFetch } = useUserContextProvider();
+  const { refreshAccessToken } = useAuthContextProvider();
   const navigate = useNavigate();
 
   const [firstName, setFirstName] = useState('');
@@ -61,8 +63,10 @@ const CreateUser = () => {
         navigate('/users/table');
       }
     } catch (error) {
+      if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) { await refreshAccessToken() };
+      console.log(error);
       toast.error(error.massage || 'Internal Server Error')
-      console.error('Login error:', error);
+
     } finally {
       setLoading(false);
     }

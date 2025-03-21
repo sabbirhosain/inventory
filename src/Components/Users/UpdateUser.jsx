@@ -6,11 +6,13 @@ import { singleUser, updateUser } from '../../Context/Api_Base_Url';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useUserContextProvider } from '../../Context/UserContext';
+import { useAuthContextProvider } from '../../Context/AuthContext';
 
 const UpdateUser = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { userDataFetch } = useUserContextProvider()
+  const { refreshAccessToken } = useAuthContextProvider();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -74,7 +76,8 @@ const UpdateUser = () => {
         navigate("/users/table");
       }
     } catch (error) {
-      console.error("Error updating user:", error);
+      if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) { await refreshAccessToken() };
+      console.log(error);
 
     } finally {
       setLoading(false);

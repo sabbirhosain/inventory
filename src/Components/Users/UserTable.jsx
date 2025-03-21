@@ -8,7 +8,7 @@ import { useUserContextProvider } from "../../Context/UserContext";
 
 const UserTable = () => {
   const paginationOptions = { noRowsPerPage: true };
-  const { userDataFetch, userList, userError, isLoadingUser, userRoleFilter, userSearchFilter, userStatusFilter } = useUserContextProvider();
+  const { userDataFetch, userList, userError, isLoadingUser, userRoleFilter, userSearchFilter, userStatusFilter, userDelete } = useUserContextProvider();
   useEffect(() => { userDataFetch(1) }, [userRoleFilter, userStatusFilter, userSearchFilter]);
 
   // data table page change
@@ -78,7 +78,7 @@ const UserTable = () => {
       cell: row => <div className="d-flex align-items-center gap-2">
         <Link to={`/users/view/${row.id}`} className="btn btn-outline-primary rounded-0 btn-sm"><BsEyeFill /></Link>
         <Link to={`/users/update/${row.id}`} className="btn btn-outline-success rounded-0 btn-sm"><BiEditAlt /></Link>
-        <button className="btn btn-outline-danger rounded-0 btn-sm"><BiTrash /></button>
+        <button onClick={() => userDelete(row.id)} className="btn btn-outline-danger rounded-0 btn-sm"><BiTrash /></button>
         <button className="btn btn-outline-dark rounded-0 btn-sm"><FaCheck /></button>
       </div>,
       width: "200px"
