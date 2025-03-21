@@ -43,7 +43,7 @@ const UserTable = () => {
     {
       name: "Email",
       selector: row => row.email,
-      width: "200px"
+      width: "250px"
     },
     {
       name: "Phone Number",
