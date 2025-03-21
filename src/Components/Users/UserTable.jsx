@@ -28,6 +28,7 @@ const UserTable = () => {
       selector: row => <a href={row.user_image} target="_new">
         <img src={row.user_image || ''} width='40' />
       </a>,
+      width: "100px",
     },
     {
       name: "Name",
@@ -42,7 +43,7 @@ const UserTable = () => {
     {
       name: "Email",
       selector: row => row.email,
-      width: "150px"
+      width: "200px"
     },
     {
       name: "Phone Number",
