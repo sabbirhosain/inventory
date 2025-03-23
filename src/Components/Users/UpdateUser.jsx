@@ -13,7 +13,7 @@ const UpdateUser = () => {
   const navigate = useNavigate();
   const { userDataFetch } = useUserContextProvider()
   const { refreshAccessToken } = useAuthContextProvider();
-  const [error, setError] = useState('');
+  const [fieldError, setFieldError] = useState({});
   const [loading, setLoading] = useState(false);
 
   const [userData, setUserData] = useState({
@@ -44,7 +44,7 @@ const UpdateUser = () => {
 
   // Handle input changes
   const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    setUserData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   // Handle file input change
@@ -55,14 +55,12 @@ const UpdateUser = () => {
   // Update the user
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
+
     try {
       const formData = new FormData();
       Object.keys(userData).forEach((key) => {
-        if (key === "user_image" && userData.user_image === null) {
-          return;
-        }
+        if (key === "user_image" && userData.user_image === null) { return; }
         formData.append(key, userData[key]);
       });
 
@@ -76,8 +74,19 @@ const UpdateUser = () => {
         navigate("/users/table");
       }
     } catch (error) {
-      if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) { await refreshAccessToken() };
-      console.log(error);
+      // Handle validation errors dynamically
+      if (error.response && error.response.data.errors) {
+        const errorData = error.response.data.errors;
+        if (typeof errorData === 'object') {
+          setFieldError(errorData);
+        }
+      }
+
+      if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) {
+        await refreshAccessToken()
+      } else {
+        console.log(error);
+      }
 
     } finally {
       setLoading(false);
@@ -95,46 +104,49 @@ const UpdateUser = () => {
               <div className="row border-top border-warning pt-4">
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>First Name</label>
-                  <input type="text" name="first_name" value={userData?.first_name || ""} onChange={handleChange} className='form-control rounded-0' required />
+                  <input type="text" name="first_name" value={userData?.first_name || ""} onChange={handleChange} className='form-control rounded-0' required disabled={loading} />
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>Last Name</label>
-                  <input type="text" name="last_name" value={userData?.last_name || ""} onChange={handleChange} className='form-control rounded-0' required />
+                  <input type="text" name="last_name" value={userData?.last_name || ""} onChange={handleChange} className='form-control rounded-0' required disabled={loading} />
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>User Name</label>
-                  <input type="text" name="username" value={userData?.username || ""} onChange={handleChange} className='form-control rounded-0' required />
+                  <input type="text" name="username" value={userData?.username || ""} onChange={handleChange} className='form-control rounded-0' required disabled={loading} />
+                  {fieldError.username && <small className='text-danger'>{fieldError.username}</small>}
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>Phone Number</label>
-                  <input type="text" name="phone_number" value={userData?.phone_number || ""} onChange={handleChange} className='form-control rounded-0' required />
+                  <input type="text" name="phone_number" value={userData?.phone_number || ""} onChange={handleChange} className='form-control rounded-0' required disabled={loading} />
+                  {fieldError.phone_number && <small className='text-danger'>{fieldError.phone_number}</small>}
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>Email Address</label>
-                  <input type="email" name="email" value={userData?.email || ""} onChange={handleChange} className='form-control rounded-0' required />
+                  <input type="email" name="email" value={userData?.email || ""} onChange={handleChange} className='form-control rounded-0' required disabled={loading} />
+                  {fieldError.email && <small className='text-danger'>{fieldError.email}</small>}
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>Date of Birth</label>
-                  <input type="date" name="date_of_birth" value={userData?.date_of_birth || ""} onChange={handleChange} className='form-control rounded-0' />
+                  <input type="date" name="date_of_birth" value={userData?.date_of_birth || ""} onChange={handleChange} className='form-control rounded-0' disabled={loading} />
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>Image</label>
-                  <input type="file" onChange={handleFileChange} className='form-control rounded-0' />
+                  <input type="file" onChange={handleFileChange} className='form-control rounded-0' disabled={loading} />
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label rounded-0'>Role</label>
-                  <select name="role" value={userData.role} onChange={handleChange} className="form-select">
-                    <option>Select User Role</option>
+                  <select name="role" value={userData.role || ""} onChange={handleChange} className="form-select" disabled={loading}>
+                    <option value=''>Select User Role</option>
                     <option value='salesman'>Salesman</option>
                     <option value='manager'>Manager</option>
                     <option value='admin'>Admin</option>
                   </select>
                 </div>
                 <div className="col-md-6 mt-3">
-                  <Link to='/users/table' type="reset" className='btn btn-dark rounded-0 w-100'>Cancel</Link>
+                  <Link to='/users/table' type="reset" className='btn btn-dark rounded-0 w-100' disabled={loading}>Cancel</Link>
                 </div>
                 <div className="col-md-6 mt-3">
-                  <button type="submit" className='btn btn-dark rounded-0 w-100'>Update User</button>
+                  <button type="submit" className='btn btn-dark rounded-0 w-100' disabled={loading}>Update User</button>
                 </div>
               </div>
             </form>

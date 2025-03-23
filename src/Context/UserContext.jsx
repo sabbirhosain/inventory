@@ -28,9 +28,13 @@ const UserContext = ({ children }) => {
             }
 
         } catch (error) {
-            if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) { await refreshAccessToken() };
-            console.log(error);
-            setUserError(error);
+            if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) {
+                await refreshAccessToken()
+            } else {
+                setUserError(error);
+                console.log(error);
+            }
+
         } finally {
             setIsLoadingUser(false);
         }
@@ -52,11 +56,15 @@ const UserContext = ({ children }) => {
                     const response = await axios.delete(`${destroyUser}${id}`);
                     if (response && response.data) {
                         Swal.fire('Deleted!', 'Item successfully deleted.', 'success');
-                        userDataFetch();
+                        userDataFetch(1);
                     }
                 } catch (error) {
-                    console.log(error);
-                    Swal.fire('Error!', 'An error occurred while deleting.', 'error');
+                    if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) {
+                        await refreshAccessToken()
+                    } else {
+                        Swal.fire('Error!', 'An error occurred while deleting.', 'error');
+                        console.log(error);
+                    }
                 }
 
             } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -87,8 +95,11 @@ const UserContext = ({ children }) => {
                 userDataFetch(1);
             }
         } catch (error) {
-            if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) { await refreshAccessToken() };
-            console.log(error);
+            if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) {
+                await refreshAccessToken()
+            } else {
+                console.log(error);
+            }
         }
     }
 

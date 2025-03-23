@@ -38,20 +38,35 @@ const AuthContext = ({ children }) => {
         navigate('/login');
     };
 
+
     // Refresh Token
     const refreshAccessToken = async () => {
-        try {
-            const response = await axios.post(refreshToken, {}, { withCredentials: true });
-            if (response && response.data) {
-                console.log(response.data);
-                localStorage.setItem('root', encryptData(response.data));
-                return response.data;
-            }
-        } catch (error) {
-            console.error("Refresh token failed:", error);
+        const encryptedToken = localStorage.getItem("root");
+        const decryptToken = encryptedToken ? decryptData(encryptedToken) : null;
+
+        if (!decryptToken?.refresh_token) {
+            console.error("Refresh token failed:");
             localStorage.removeItem("root");
             window.location.href = "/login";
             return null;
+        }
+
+        try {
+            const response = await fetch(refreshToken, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', },
+                body: JSON.stringify({ refresh: decryptToken.refresh_token, }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                localStorage.setItem('root', encryptData(data));
+                window.location.href = "/dashboad";
+                return data;
+            } else {
+                console.error('Refresh Token failed:', data);
+            }
+        } catch (error) {
+            console.error("Refresh token failed:", error);
         }
     };
 
@@ -72,8 +87,7 @@ const AuthContext = ({ children }) => {
             }
         } catch (error) {
             if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) {
-                localStorage.removeItem("root");
-                window.location.href = "/login";
+                await refreshAccessToken()
             } else {
                 console.log(error);
             }

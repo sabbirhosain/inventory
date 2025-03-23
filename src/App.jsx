@@ -23,7 +23,7 @@ const App = () => {
   const { decryptData } = useAuthContextProvider();
   const encryptedToken = localStorage.getItem("root");
   const decryptToken = encryptedToken ? decryptData(encryptedToken) : null;
-
+  
   axios.defaults.baseURL = import.meta.env.VITE_API_URL;
   axios.defaults.headers.common['Authorization'] = `Bearer ${decryptToken?.access_token}`;
   axios.defaults.headers.post['Content-Type'] = 'application/json';
