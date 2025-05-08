@@ -40,7 +40,7 @@ const Sidebar = () => {
 
             <div className="accordion accordion-flush" id="accordionFlushExample">
 
-              <li className="dropdown_list">
+              {/* <li className="dropdown_list">
                 <button className="dropdown_btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsePaymenta" aria-expanded="false" aria-controls="flush-collapsePaymenta">
                   <span className="dropdown_list_name">
                     <MdAccountBalance className="dropdown_list_icon" />Accounts</span>
@@ -51,9 +51,9 @@ const Sidebar = () => {
                   <NavLink to={"#"} className="dropdown_link"><MdDoubleArrow />Chart of Accounts</NavLink>
                   <NavLink to={"#"} className="dropdown_link"><MdDoubleArrow />Account Statement</NavLink>
                 </div>
-              </li>
+              </li> */}
 
-              <li className="dropdown_list">
+              {/* <li className="dropdown_list">
                 <button className="dropdown_btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseUser" aria-expanded="false" aria-controls="flush-collapseUser">
                   <span className="dropdown_list_name">
                     <GrDashboard className="dropdown_list_icon" />Users</span>
@@ -67,9 +67,9 @@ const Sidebar = () => {
                   <NavLink to={"#"} className="dropdown_link"><MdDoubleArrow />Suppliers</NavLink>
                   <NavLink to={"#"} className="dropdown_link"><MdDoubleArrow />Area Manager</NavLink>
                 </div>
-              </li>
+              </li> */}
 
-              <li className="dropdown_list">
+              {/* <li className="dropdown_list">
                 <button className="dropdown_btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseInventory" aria-expanded="false" aria-controls="flush-collapseInventory">
                   <span className="dropdown_list_name">
                     <MdInventory className="dropdown_list_icon" />Inventory</span>
@@ -82,7 +82,7 @@ const Sidebar = () => {
                   <NavLink to={"#"} className="dropdown_link"><MdDoubleArrow />Pack size</NavLink>
                   <NavLink to={"#"} className="dropdown_link"><MdDoubleArrow />Stock Adjustment</NavLink>
                 </div>
-              </li>
+              </li> */}
 
               <li className="dropdown_list">
                 <button className="dropdown_btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseInvoice" aria-expanded="false" aria-controls="flush-collapseInvoice">
@@ -100,7 +100,7 @@ const Sidebar = () => {
                 </div>
               </li>
 
-              <li className="dropdown_list">
+              {/* <li className="dropdown_list">
                 <button className="dropdown_btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsePayment2" aria-expanded="false" aria-controls="flush-collapsePayment2">
                   <span className="dropdown_list_name">
                     <GrTransaction className="dropdown_list_icon" />Transaction</span>
@@ -112,9 +112,9 @@ const Sidebar = () => {
                   <NavLink to={"#"} className="dropdown_link"><MdDoubleArrow />Receive</NavLink>
                   <NavLink to={"#"} className="dropdown_link"><MdDoubleArrow />Transfer</NavLink>
                 </div>
-              </li>
+              </li> */}
 
-              <li className="dropdown_list">
+              {/* <li className="dropdown_list">
                 <button className="dropdown_btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseReports" aria-expanded="false" aria-controls="flush-collapseReports">
                   <span className="dropdown_list_name">
                     <TbReportSearch className="dropdown_list_icon" />Reports</span>
@@ -131,35 +131,35 @@ const Sidebar = () => {
                   <NavLink to={"#"} className="dropdown_link"><MdDoubleArrow />Receive Reports</NavLink>
                   <NavLink to={"#"} className="dropdown_link"><MdDoubleArrow />Purchase Reports</NavLink>
                 </div>
-              </li>
+              </li> */}
 
               <li className="dropdown_list">
                 <NavLink to={"#"} className="dropdown_btn">
                   <span className="dropdown_list_name">
-                    <GrDashboard className="dropdown_list_icon" />Expense</span>
+                    <GrDashboard className="dropdown_list_icon" />Order</span>
                 </NavLink>
               </li>
 
               <li className="dropdown_list">
                 <NavLink to={"#"} className="dropdown_btn">
                   <span className="dropdown_list_name">
-                    <GrDashboard className="dropdown_list_icon" />Purchase</span>
+                    <GrDashboard className="dropdown_list_icon" />Trucker</span>
                 </NavLink>
               </li>
 
-              <li className="dropdown_list">
+              {/* <li className="dropdown_list">
                 <NavLink to={"#"} className="dropdown_btn">
                   <span className="dropdown_list_name">
                     <GrDashboard className="dropdown_list_icon" />Work Order</span>
                 </NavLink>
-              </li>
+              </li> */}
 
-              <li className="dropdown_list">
+              {/* <li className="dropdown_list">
                 <NavLink to={"#"} className="dropdown_btn">
                   <span className="dropdown_list_name">
                     <IoSettings className="dropdown_list_icon" />Settings</span>
                 </NavLink>
-              </li>
+              </li> */}
 
             </div>
           </ul>

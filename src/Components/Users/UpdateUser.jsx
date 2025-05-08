@@ -127,7 +127,7 @@ const UpdateUser = () => {
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>Date of Birth</label>
-                  <input type="date" name="date_of_birth" value={userData?.date_of_birth || ""} onChange={handleChange} className='form-control rounded-0' disabled={loading} />
+                  <input type="date" name="date_of_birth" value={userData?.date_of_birth || ""} onChange={handleChange} className='form-control rounded-0' required disabled={loading} />
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label'>Image</label>
@@ -135,7 +135,7 @@ const UpdateUser = () => {
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className='form-label rounded-0'>Role</label>
-                  <select name="role" value={userData.role || ""} onChange={handleChange} className="form-select" disabled={loading}>
+                  <select name="role" value={userData.role || ""} onChange={handleChange} className="form-select" required disabled={loading}>
                     <option value=''>Select User Role</option>
                     <option value='salesman'>Salesman</option>
                     <option value='manager'>Manager</option>

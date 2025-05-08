@@ -67,7 +67,7 @@ const Login = () => {
     return (
         <section className='d-flex align-items-center justify-content-center vh-100'>
             <div className="container">
-                <div className="row justify-content-center">
+                <div className="row justify-content-center w-100">
                     <div className="col-md-5">
                         <form className='shadow-sm bg-white p-4' onSubmit={handleSubmit}>
                             <h4 className='text-center mb-4'>Login Now</h4>

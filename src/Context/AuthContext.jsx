@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import CryptoJS from 'crypto-js';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { refreshToken, singleUser } from './Api_Base_Url';
 const AuthContextProvider = createContext();
@@ -40,6 +40,7 @@ const AuthContext = ({ children }) => {
 
 
     // Refresh Token
+    const location = useLocation();
     const refreshAccessToken = async () => {
         const encryptedToken = localStorage.getItem("root");
         const decryptToken = encryptedToken ? decryptData(encryptedToken) : null;
@@ -60,7 +61,8 @@ const AuthContext = ({ children }) => {
             const data = await response.json();
             if (response.ok) {
                 localStorage.setItem('root', encryptData(data));
-                window.location.href = "/dashboad";
+                // window.location.href = "/dashboad";
+                window.location.href = location.pathname;
                 return data;
             } else {
                 console.error('Refresh Token failed:', data);
@@ -73,6 +75,7 @@ const AuthContext = ({ children }) => {
     // User Profile Fetch
     const [updateProfile, setUpdateProfile] = useState({ first_name: "", last_name: "", username: "", email: "", phone_number: "", date_of_birth: "", user_image: null });
     const [userProfile, setUserProfile] = useState({});
+
     const userProfileFetch = async () => {
         try {
             const encryptedToken = localStorage.getItem("root");

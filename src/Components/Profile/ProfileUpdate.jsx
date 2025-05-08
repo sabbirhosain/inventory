@@ -1,11 +1,12 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useAuthContextProvider } from '../../Context/AuthContext'
 import { updateUser } from '../../Context/Api_Base_Url';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
 const ProfileUpdate = () => {
-    const { updateProfile, setUpdateProfile, userProfileFetch } = useAuthContextProvider()
+    const { updateProfile, setUpdateProfile, userProfileFetch, refreshAccessToken } = useAuthContextProvider()
+    const [fieldError, setFieldError] = useState({});
     const CloseRef = useRef();
 
     const profileInputChange = (e) => {
@@ -46,8 +47,20 @@ const ProfileUpdate = () => {
                 userProfileFetch();
             }
         } catch (error) {
-            console.error('Error updating user:', error);
-            toast.error(error.massage || 'something wrong');
+            // Handle validation errors dynamically
+            if (error.response && error.response.data) {
+                const errorData = error.response.data;
+                if (typeof errorData === 'object') {
+                    setFieldError(errorData);
+                }
+            }
+
+            if (error.response && (error.response?.status === 401 || error.response.status === 403 || error.response?.data?.code === "token_not_valid")) {
+                await refreshAccessToken()
+            } else {
+                console.log(error);
+                toast.error(error.massage || 'Internal Server Error')
+            }
         }
     };
 
